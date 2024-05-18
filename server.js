@@ -16,6 +16,7 @@ const cartItemRoute = require("./src/routes/cartItem.route");
 const wishlistItemRoute = require("./src/routes/wishlistItem.route");
 const addressRoute = require("./src/routes/address.route");
 const reviewRoute = require("./src/routes/review.route");
+const orderRoute = require("./src/routes/order.route");
 
 
 const app = express();
@@ -29,7 +30,13 @@ app.use(
 app.use(express.json());
 app.use(fileUpload({ limits: { fileSize: "10*1024*1024" } }));
 app.use(helmet());
+const delayMiddleware = (req, res, next) => {
+  setTimeout(() => {
+    next();
+  }, 2000);
+};
 
+// app.use(delayMiddleware);//for testing
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/brands", brandRoute);
@@ -39,6 +46,7 @@ app.use('/api/cartitems',cartItemRoute);
 app.use('/api/wishlistitems',wishlistItemRoute);
 app.use('/api/addresses',addressRoute);
 app.use('/api/reviews',reviewRoute);
+app.use('/api/orders',orderRoute);
 
 app.use(compression());
 

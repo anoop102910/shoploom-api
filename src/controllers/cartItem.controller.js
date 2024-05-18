@@ -51,7 +51,7 @@ exports.getAllCartItems = async (req, res) => {
       where: { userId },
       include: {
         model: Product,
-        attributes: ["id", "title", "avgRating", "slug", "price", "image"],
+        attributes: ["id", "title", "avgRating", "slug", "price", "image","discount"],
       },
       order:[['createdAt','ASC']],
       attributes: { exclude: ["createdAt", "updatedAt"] },

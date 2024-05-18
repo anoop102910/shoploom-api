@@ -45,6 +45,11 @@ Product.init(
       type: DataTypes.STRING,
       defaultValue: 3,
     },
+    available:{
+      type:DataTypes.BOOLEAN,
+      defaultValue:true,
+      allowNull:false
+    }
   },
   {
     sequelize,

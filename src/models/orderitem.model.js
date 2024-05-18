@@ -23,13 +23,11 @@ const OrderItem = sequelize.define(
   },
   {
     sequelize,
-    modelName: "OrderItem",
   }
 );
 
-OrderItem.belongsTo(Order, { onDelete: "cascade" });
-OrderItem.belongsTo(Product, { onDelete: "cascade" });
-// Order.hasMany(OrderItem);
-// Product.hasMany(OrderItem);
+OrderItem.belongsTo(Order, { foreignKey: "orderId", onDelete: "cascade" });
+OrderItem.belongsTo(Product, { onDelete: "no action" });
+Order.hasMany(Order, { constraints: false });
 
 module.exports = OrderItem;

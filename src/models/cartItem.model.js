@@ -20,7 +20,6 @@ CartItem.init(
   },
   {
     sequelize,
-    modelName: "CartItem",
   }
 );
 

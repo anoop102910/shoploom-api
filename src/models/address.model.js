@@ -19,9 +19,9 @@ Address.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    address:{
-        type: DataTypes.STRING,
-        allowNull: false
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     street: {
       type: DataTypes.STRING,
@@ -47,10 +47,9 @@ Address.init(
   },
   {
     sequelize,
-    modelName: "Address",
+    paranoid: true,
   }
 );
-
 
 Address.belongsTo(User);
 module.exports = Address;

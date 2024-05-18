@@ -70,6 +70,12 @@ exports.getAllProducts = async (req, res) => {
       case "newest":
         orderBy = [["createdAt", "DESC"]];
         break;
+      case "discounthightolow":
+        orderBy = [["discount", "DESC"]];
+        break;
+      case "discounthightolow":
+        orderBy = [["discount", "ASC"]];
+        break;
       default:
         orderBy = [["createdAt", "DESC"]];
     }
@@ -95,7 +101,7 @@ exports.getProductBySlug = async (req, res) => {
     const slug = req.params.slug;
 
     // Find the product by ID
-    const product = await Product.findOne({ where: { slug } ,include:[Category,Brand]});
+    const product = await Product.findOne({ where: { slug }, include: [Category, Brand] });
     if (!product) {
       return sendResponse(res, 404, "Product not found", null);
     }
@@ -117,20 +123,21 @@ exports.createProduct = async (req, res) => {
     if (error) {
       return sendResponse(res, 400, error.details[0].message, null);
     }
+
+    const slug = slugify(value.title, { lower: true });
+    const existingProduct = await Product.findOne({ where: { slug } });
+
+    if (existingProduct) {
+      return sendResponse(res, 400, `Product with same title already exists`, null);
+    }
     if (!req.files || !req.files.image) {
       return sendResponse(res, 400, "Image is required", null);
     }
     const { url } = await uploadImage(req.files.image.data);
     value.image = url;
 
-    const slug = slugify(value.title, { lower: true });
-    const existingProduct = await Product.findOne({ where: { slug } });
-    if (existingProduct) {
-      return sendResponse(res, 400, `Product with same title already exists`, null);
-    }
-
     const product = await Product.create(value);
-    const newProduct = await Product.findByPk(product.id,{include:[Category,Brand]})
+    const newProduct = await Product.findByPk(product.id, { include: [Category, Brand] });
     console.log(newProduct);
     sendResponse(res, 201, "Product created successfully", newProduct);
   } catch (error) {

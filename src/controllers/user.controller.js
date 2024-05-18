@@ -41,7 +41,7 @@ exports.getProfile = async (req, res) => {
 
     // Find the user by ID
     const user = await User.findByPk(userId, {
-      exclude: ["password", "role", "createdAt", "updatedAt"],
+      attributes: ["name", "gender", "bio"],
     });
     if (!user) {
       return sendResponse(res, 404, "User not found", null);
@@ -80,6 +80,33 @@ exports.updateUser = async (req, res) => {
     sendResponse(res, 500, error.message, null);
   }
 };
+
+// @desc    Update user profile
+// @route   PUT /api/users/profile
+// @access  Private
+exports.updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const { value, error } = profileUpdateSchema.validate(req.body);
+    if (error) {
+      return sendResponse(res, 400, error.details[0].message, null);
+    }
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return sendResponse(res, 404, "User not found", null);
+    }
+
+    newUser = await user.update(value);
+
+    sendResponse(res, 200, "User profile updated successfully", newUser);
+  } catch (error) {
+    console.error(error);
+    sendResponse(res, 500, error.message, null);
+  }
+};
+
 
 // @desc    Delete user
 // @route   DELETE /api/users/:id

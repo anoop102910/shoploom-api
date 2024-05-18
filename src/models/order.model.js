@@ -27,10 +27,10 @@ Order.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    status:{
-        type: DataTypes.ENUM,
-        values: ["pending", "processing", "shipped", "delivered", "cancelled"],
-        allowNull: false,
+    status: {
+      type: DataTypes.ENUM,
+      values: ["pending", "processing", "shipped", "delivered", "cancelled"],
+      allowNull: false,
     },
     /*  stripeId: {
       type: DataTypes.STRING,
@@ -47,10 +47,8 @@ Order.init(
   },
   {
     sequelize,
-    modelName: "Order",
-    tableName: "orders",
   }
 );
 
-Order.belongsTo(Address, { onDelete: "no action" });
+Order.belongsTo(Address, { foreignKey: "addressId", onDelete: "cascade" });
 module.exports = Order;

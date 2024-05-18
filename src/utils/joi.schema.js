@@ -119,3 +119,18 @@ exports.orderItemSchema = Joi.object({
   price: Joi.number().required(),
   orderId: Joi.number().required(),
 });
+
+
+exports.orderUpdateSchema = Joi.object({
+  addressId: Joi.number(),
+  status: Joi.string().valid("pending", "processing", "shipped", "delivered", "cancelled"),
+});
+
+
+exports.profileUpdateSchema = Joi.object({
+  name: Joi.string().allow("", null),
+  gender: Joi.string().valid("male", "female", "other"),
+  bio: Joi.string().allow("", null),
+});
+
+
