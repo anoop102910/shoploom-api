@@ -7,6 +7,7 @@ const Product = require("../models/product.model");
 const sendResponse = require("../utils/sendResponse");
 const { orderSchema, orderItemSchema, orderUpdateSchema } = require("../utils/joi.schema");
 const Address = require("../models/address.model");
+const { orderBy } = require("firebase/firestore");
 
 // @desc    Create an order
 // @route   POST /api/orders
@@ -80,7 +81,10 @@ exports.getOrderById = async (req, res) => {
 
 exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.findAll({ where: { userId: req.user.id } });
+    const orders = await Order.findAll({
+      where: { userId: req.user.id },
+      order: [["createdAt", "DESC"]],
+    });
     sendResponse(res, 200, "Orders retrieved successfully", orders);
   } catch (error) {
     console.log(error);

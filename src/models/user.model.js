@@ -35,28 +35,29 @@ User.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
     role: {
       type: DataTypes.ENUM("User", "Admin"),
       allowNull: false,
       defaultValue: "User",
+    },
+    image: {
+      type: DataTypes.STRING,
+    },
+    refreshToken: {
+      type: DataTypes.STRING,
     },
   },
   {
     sequelize,
     modelName: "users",
     hooks: {
-      beforeCreate: async (user) => {
-        console.log('before', user)
+      beforeCreate: async user => {
         if (user.password) {
           const hashedPassword = await bcrypt.hash(user.password, 10);
           user.password = hashedPassword;
         }
-      }
-    }
+      },
+    },
   }
 );
 

@@ -2,6 +2,7 @@ const Joi = require("joi");
 const Review = require("../models/review.model");
 const sendResponse = require("../utils/sendResponse");
 const User = require("../models/user.model");
+const Product = require("../models/product.model");
 
 const reviewSchema = Joi.object({
   rating: Joi.number()
@@ -25,11 +26,19 @@ exports.createReview = async (req, res) => {
   if (error) {
     return sendResponse(res, 400, error.details[0].message, null);
   }
-  value.userId = req.user.id;
-
   try {
+    value.userId = req.user.id;
+    const product = Product.findOne({ where: { id: value.productId } });
+    if (!product) {
+      return sendResponse(res, 400, error.detials[0].message, null);
+    }
     const review = await Review.create(value);
     sendResponse(res, 201, "Review created successfully", review);
+
+    const reviewCount = Review.count({ where: { productId: value.productId } });
+    const newAvgRating = (product.newAvgRating + value.rating) / reviewCount;
+    await product.update({ newAvgRating });
+    
   } catch (error) {
     console.error("Error creating review:", error);
     sendResponse(res, 500, error.message, null);

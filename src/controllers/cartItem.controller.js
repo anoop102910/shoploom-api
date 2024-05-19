@@ -49,11 +49,8 @@ exports.getAllCartItems = async (req, res) => {
     const userId = req.user.id;
     const cartItems = await CartItem.findAll({
       where: { userId },
-      include: {
-        model: Product,
-        attributes: ["id", "title", "avgRating", "slug", "price", "image","discount"],
-      },
-      order:[['createdAt','ASC']],
+      include: Product,
+      order: [["createdAt", "ASC"]],
       attributes: { exclude: ["createdAt", "updatedAt"] },
     });
     sendResponse(res, 200, "CartItems retrieved successfully", cartItems);

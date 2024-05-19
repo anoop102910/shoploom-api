@@ -10,6 +10,7 @@ const categorySchema = Joi.object({
   description: Joi.string()
     .trim()
     .allow("", null),
+  parentId: Joi.number().allow("", null),
 });
 
 // @desc    Create a category
@@ -30,7 +31,10 @@ exports.createCategory = async (req, res) => {
 
     // Create the category
     const category = await Category.create(value);
-    sendResponse(res, 201, "Category created successfully", category);
+    const newCategory = await Category.findByPk(category.id, {
+      include: [{ model: Category, as: "parentCategory" }],
+    });
+    sendResponse(res, 201, "Category created successfully", newCategory);
   } catch (error) {
     console.error("Error creating category:", error);
     sendResponse(res, 500, error.message, null);
@@ -58,7 +62,11 @@ exports.updateCategory = async (req, res) => {
 
     // Update the category
     category = await category.update(value);
-    sendResponse(res, 200, "Category updated successfully", category);
+    const newCategory = await Category.findByPk(category.id, {
+      include: [{ model: Category, as: "parentCategory" }],
+    });
+
+    sendResponse(res, 200, "Category updated successfully", newCategory);
   } catch (error) {
     console.error("Error updating category:", error);
     sendResponse(res, 500, error.message, null);
@@ -93,11 +101,19 @@ exports.getAllCategories = async (req, res) => {
     // Get all categories
     console.log("GET ALL CATEGORIES");
     const name = req.query.name;
+    const type = req.query.type;
     const whereClause = {};
     if (name) {
       whereClause.name = { [Op.iLike]: `%${name}%` };
     }
-    const categories = await Category.findAll({ where: whereClause });
+    if (type && type == "parent") {
+      whereClause.parentId = null;
+    }
+    const categories = await Category.findAll({
+      where: whereClause,
+      include: [{ model: Category, as: "parentCategory" }],
+      order: [["createdAt", "DESC"]],
+    });
     sendResponse(res, 200, "Categories retrieved successfully", categories);
   } catch (error) {
     console.error("Error retrieving categories:", error);
@@ -113,7 +129,9 @@ exports.getCategoryById = async (req, res) => {
     const categoryId = req.params.id;
 
     // Find the category by ID
-    const category = await Category.findByPk(categoryId);
+    const category = await Category.findByPk(categoryId, {
+      include: [{ model: Category, as: "parentCategory" }],
+    });
     if (!category) {
       return sendResponse(res, 404, "Category not found", null);
     }

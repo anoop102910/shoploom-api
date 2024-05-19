@@ -16,7 +16,6 @@ Category.init(
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: true,
     },
   },
   {
@@ -25,5 +24,10 @@ Category.init(
   }
 );
 
+Category.belongsTo(Category, {
+  foreignKey: "parentId",
+  constraints: false,
+  as: "parentCategory",
+});
 
 module.exports = Category;

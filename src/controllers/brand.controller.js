@@ -2,6 +2,7 @@ const Joi = require("joi");
 const Brand = require("../models/brand.model");
 const sendResponse = require("../utils/sendResponse");
 const Category = require("../models/category.model");
+const { uploadImage } = require("../utils/uploadImage");
 
 const brandSchema = Joi.object({
   name: Joi.string()
@@ -29,6 +30,12 @@ exports.createBrand = async (req, res) => {
     if (existingBrand) {
       return sendResponse(res, 400, `Brand with name '${req.body.name}' already exists`, null);
     }
+
+    if (req.files && req.files.image) {
+      const { url } = await uploadImage(req.files.image.data, 100, "brand");
+      value.image = url;
+    }
+
     const brand = await Brand.create(value);
     const newBrand = await Brand.findOne({ where: { id: brand.id }, include: Category });
     sendResponse(res, 201, "Brand created successfully", newBrand);
@@ -87,6 +94,10 @@ exports.updateBrand = async (req, res) => {
     let brand = await Brand.findByPk(brandId);
     if (!brand) {
       return sendResponse(res, 404, "Brand not found", null);
+    }
+    if (req.files && req.files.image) {
+      const { url } = await uploadImage(req.files.image.data, 100, "brand");
+      value.image = url;
     }
     brand = await brand.update(req.body);
     const newBrand = await Brand.findOne({ where: { id: brand.id }, include: Category });

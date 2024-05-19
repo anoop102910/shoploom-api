@@ -16,10 +16,7 @@ Brand.init(
       allowNull: false,
       unique: true,
     },
-    description: {
-      type: DataTypes.TEXT,
-    },
-    imageUrl: {
+    image: {
       type: DataTypes.STRING,
     },
   },

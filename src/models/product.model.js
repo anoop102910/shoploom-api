@@ -54,6 +54,7 @@ Product.init(
   {
     sequelize,
     modelName: "products",
+    paranoid:true
   }
 );
 

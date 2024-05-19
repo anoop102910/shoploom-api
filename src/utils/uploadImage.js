@@ -1,6 +1,10 @@
-const cloudinary = require('cloudinary').v2;
-const streamifier = require('streamifier');
-const {CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET} = require('../config/config')
+const cloudinary = require("cloudinary").v2;
+const streamifier = require("streamifier");
+const {
+  CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET,
+} = require("../config/config");
 
 cloudinary.config({
   cloud_name: CLOUDINARY_CLOUD_NAME,
@@ -8,23 +12,27 @@ cloudinary.config({
   api_secret: CLOUDINARY_API_SECRET,
 });
 
-exports.uploadImage = async (buffer, width) => {
+exports.uploadImage = async (buffer, width = 1000, location = "product") => {
   try {
     return new Promise((resolve, reject) => {
-      const cld_upload_stream = cloudinary.uploader.upload_stream({ 
-        resource_type: "image",
-        folder: "product/uploads",
-        format: 'webp' 
-      }, (error, result) => {
-        if (error) {
-          console.error(error);
-          reject(error);
-        } else {
-          console.log(result);
-          resolve(result);
+      const cld_upload_stream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "image",
+          folder: `${location}/uploads`,
+          format: "webp",
+          width,
+        },
+        (error, result) => {
+          if (error) {
+            console.error(error);
+            reject(error);
+          } else {
+            console.log(result);
+            resolve(result);
+          }
         }
-      });
-      
+      );
+
       streamifier.createReadStream(buffer).pipe(cld_upload_stream);
     });
   } catch (error) {
@@ -32,7 +40,6 @@ exports.uploadImage = async (buffer, width) => {
     throw error;
   }
 };
-
 
 // RESPONSE EXAMPLE
 // {

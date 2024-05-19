@@ -26,6 +26,9 @@ exports.getAllProducts = async (req, res) => {
       maxquantity,
       sortBy,
     } = req.query;
+
+    const limit = parseInt(req.query.limit) || 10;
+    const page = parseInt(req.query.page) || 1;
     if (title) {
       whereClause.title = { [Op.iLike]: `%${title}%` };
     }
@@ -84,6 +87,8 @@ exports.getAllProducts = async (req, res) => {
       where: whereClause,
       order: orderBy,
       include: [Category, Brand],
+      limit,
+      offset: limit * (page - 1),
     });
 
     sendResponse(res, 200, "Products retrieved successfully", products);
