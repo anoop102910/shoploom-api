@@ -11,6 +11,7 @@ const brandSchema = Joi.object({
   description: Joi.string()
     .trim()
     .allow("", null),
+  image: Joi.allow("", null),
   categoryId: Joi.number()
     .integer()
     .required(),
@@ -32,7 +33,7 @@ exports.createBrand = async (req, res) => {
     }
 
     if (req.files && req.files.image) {
-      const { url } = await uploadImage(req.files.image.data, 100, "brand");
+      const { url } = await uploadImage(req.files.image.data, 200, "brand");
       value.image = url;
     }
 
@@ -60,7 +61,11 @@ exports.getAllBrands = async (req, res) => {
       whereClause.categoryId = categoryId;
     }
 
-    const brands = await Brand.findAll({ where: whereClause, include: Category });
+    const brands = await Brand.findAll({
+      where: whereClause,
+      include: Category,
+      order: [["createdAt", "DESC"]],
+    });
     sendResponse(res, 200, "Brands retrieved successfully", brands);
   } catch (error) {
     console.error("Error retrieving brands:", error);
@@ -97,11 +102,11 @@ exports.updateBrand = async (req, res) => {
     }
     if (req.files && req.files.image) {
       const { url } = await uploadImage(req.files.image.data, 100, "brand");
-      value.image = url;
+      brand.image = url;
     }
     brand = await brand.update(req.body);
     const newBrand = await Brand.findOne({ where: { id: brand.id }, include: Category });
-    sendResponse(res, 200, "Brand updated successfully", brand);
+    sendResponse(res, 200, "Brand updated successfully", newBrand);
   } catch (error) {
     console.error("Error updating brand:", error);
     sendResponse(res, 500, error.message, null);

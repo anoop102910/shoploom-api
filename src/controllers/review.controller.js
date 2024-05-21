@@ -28,17 +28,21 @@ exports.createReview = async (req, res) => {
   }
   try {
     value.userId = req.user.id;
-    const product = Product.findOne({ where: { id: value.productId } });
+    const product = await Product.findOne({ where: { id: value.productId } });
     if (!product) {
-      return sendResponse(res, 400, error.detials[0].message, null);
+      return sendResponse(res, 400, "Product not found", null);
     }
-    const review = await Review.create(value);
-    sendResponse(res, 201, "Review created successfully", review);
+    const review = await Review.sequelize.transaction(async t => {
+      const review = await Review.create(value, { transaction: t });
+      const reviewCount = await Review.count({ where: { productId: value.productId }, transaction: t });
+      const totalRating = product.avgRating * (reviewCount - 1) + value.rating;
+      console.log("rating", totalRating);
+      const newAvgRating = totalRating / reviewCount;
+      await product.update({ avgRating: newAvgRating }, { transaction: t });
+      return review;
+    });
 
-    const reviewCount = Review.count({ where: { productId: value.productId } });
-    const newAvgRating = (product.newAvgRating + value.rating) / reviewCount;
-    await product.update({ newAvgRating });
-    
+    sendResponse(res, 201, "Review created successfully", review);
   } catch (error) {
     console.error("Error creating review:", error);
     sendResponse(res, 500, error.message, null);
@@ -50,7 +54,7 @@ exports.createReview = async (req, res) => {
 // @access  Public
 exports.getAllReviews = async (req, res) => {
   try {
-    const reviews = await Review.findAll();
+    const reviews = await Review.findAll({ order: [["createdAt", "DESC"]] });
     sendResponse(res, 200, "Reviews retrieved successfully", reviews);
   } catch (error) {
     console.error("Error retrieving reviews:", error);

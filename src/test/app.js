@@ -4,19 +4,19 @@ const helmet = require("helmet");
 const compression = require("compression");
 const fileUpload = require("express-fileupload");
 
-const { CLIENT_URL } = require("./src/config/config");
-const sendResponse = require("./src/utils/sendResponse");
+const { CLIENT_URL } = require("../config/config");
+const sendResponse = require("../utils/sendResponse");
 
-const authRoute = require("./src/routes/auth.route");
-const userRoute = require("./src/routes/user.route");
-const brandRoute = require("./src/routes/brand.route");
-const productRoute = require("./src/routes/product.route");
-const categoryRoute = require("./src/routes/category.route");
-const cartItemRoute = require("./src/routes/cartItem.route");
-const wishlistItemRoute = require("./src/routes/wishlistItem.route");
-const addressRoute = require("./src/routes/address.route");
-const reviewRoute = require("./src/routes/review.route");
-const orderRoute = require("./src/routes/order.route");
+const authRoute = require("../routes/auth.route");
+const userRoute = require("../routes/user.route");
+const brandRoute = require("../routes/brand.route");
+const productRoute = require("../routes/product.route");
+const categoryRoute = require("../routes/category.route");
+const cartItemRoute = require("../routes/cartItem.route");
+const wishlistItemRoute = require("../routes/wishlistItem.route");
+const addressRoute = require("../routes/address.route");
+const reviewRoute = require("../routes/review.route");
+const orderRoute = require("../routes/order.route");
 
 
 const app = express();
@@ -36,7 +36,6 @@ const delayMiddleware = (req, res, next) => {
   }, 1000);
 };
 
-// app.use(delayMiddleware);//for testing
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/brands", brandRoute);
@@ -56,13 +55,6 @@ app.get("/", (req, res) => {
 
 app.get("*", (req, res) => {
   res.status(404).json({ message: "Page not found" });
-});
-
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, err => {
-  if (err) console.log(err);
-  else console.log(`Listening on port ${PORT}`);
 });
 
 

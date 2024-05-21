@@ -42,7 +42,7 @@ Product.init(
       unique: true,
     },
     avgRating: {
-      type: DataTypes.STRING,
+      type: DataTypes.FLOAT,
       defaultValue: 3,
     },
     available:{

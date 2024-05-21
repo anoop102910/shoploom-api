@@ -66,7 +66,7 @@ exports.getOrderById = async (req, res) => {
     }
     const orderItems = await OrderItem.findAll({
       where: { orderId: order.id },
-      include: Product,
+      include: [{ model: Product, paranoid: false }],
     });
     const orderWithItems = {
       ...order.toJSON(),

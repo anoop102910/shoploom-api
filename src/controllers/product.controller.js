@@ -2,7 +2,7 @@ const Joi = require("joi");
 const Product = require("../models/product.model");
 const sendResponse = require("../utils/sendResponse");
 const { default: slugify } = require("slugify");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const { productSchema, productUpdateSchema } = require("../utils/joi.schema");
 const { uploadImage } = require("../utils/uploadImage");
 const Category = require("../models/category.model");
@@ -18,6 +18,8 @@ exports.getAllProducts = async (req, res) => {
       title,
       categoryId,
       brandId,
+      categoryName,
+      productName,
       minrating,
       minprice,
       maxprice,
@@ -25,6 +27,8 @@ exports.getAllProducts = async (req, res) => {
       minquantity,
       maxquantity,
       sortBy,
+      brands,
+      brandName
     } = req.query;
 
     const limit = parseInt(req.query.limit) || 10;
@@ -33,8 +37,18 @@ exports.getAllProducts = async (req, res) => {
       whereClause.title = { [Op.iLike]: `%${title}%` };
     }
     if (categoryId) {
-      whereClause.categoryId = categoryId;
+      whereClause.categoryId = {
+        [Op.or]: [
+          categoryId,
+          {
+            [Op.in]: Sequelize.literal(`(
+              SELECT id FROM "categories" WHERE "parentId" = ${categoryId}
+            )`)
+          }
+        ]
+      };
     }
+    
     if (brandId) {
       whereClause.brandId = { [Op.in]: brands };
     }
@@ -57,6 +71,12 @@ exports.getAllProducts = async (req, res) => {
       whereClause.quantity = { [Op.gte]: minquantity };
     } else if (maxquantity) {
       whereClause.quantity = { [Op.lt]: maxquantity };
+    }
+    if (categoryName) {
+      whereClause["$category.name$"] = categoryName;
+    }
+    if (brandName) {
+      whereClause["$brand.name$"] = brandName;
     }
 
     let orderBy;

@@ -109,6 +109,12 @@ exports.getAllCategories = async (req, res) => {
     if (type && type == "parent") {
       whereClause.parentId = null;
     }
+    if (type && type === "sub") {
+      whereClause.parentId = { [Op.not]: null };
+    }
+    if (req.query.parentId) {
+      whereClause.parentId = parentId;
+    }
     const categories = await Category.findAll({
       where: whereClause,
       include: [{ model: Category, as: "parentCategory" }],
