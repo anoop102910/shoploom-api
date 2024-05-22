@@ -3,20 +3,7 @@ const Review = require("../models/review.model");
 const sendResponse = require("../utils/sendResponse");
 const User = require("../models/user.model");
 const Product = require("../models/product.model");
-
-const reviewSchema = Joi.object({
-  rating: Joi.number()
-    .integer()
-    .min(1)
-    .max(5)
-    .required(),
-  comment: Joi.string()
-    .trim()
-    .allow("", null),
-  productId: Joi.number()
-    .integer()
-    .required(),
-});
+const { reviewSchema } = require("../utils/joi.schema");
 
 // @desc    Create a review
 // @route   POST /api/reviews

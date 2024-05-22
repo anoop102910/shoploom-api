@@ -2,16 +2,7 @@ const Joi = require("joi");
 const Category = require("../models/category.model");
 const sendResponse = require("../utils/sendResponse");
 const { Op } = require("sequelize");
-// Joi schema for category validation
-const categorySchema = Joi.object({
-  name: Joi.string()
-    .trim()
-    .required(),
-  description: Joi.string()
-    .trim()
-    .allow("", null),
-  parentId: Joi.number().allow("", null),
-});
+const { categorySchema } = require("../utils/joi.schema");
 
 // @desc    Create a category
 // @route   POST /api/categories

@@ -1,5 +1,55 @@
 const Joi = require("joi");
 
+
+exports.brandSchema = Joi.object({
+  name: Joi.string()
+    .trim()
+    .required(),
+  description: Joi.string()
+    .trim()
+    .allow("", null),
+  image: Joi.allow("", null),
+  categoryId: Joi.number()
+    .integer()
+    .required(),
+});
+
+exports.reviewSchema = Joi.object({
+  rating: Joi.number()
+    .integer()
+    .min(1)
+    .max(5)
+    .required(),
+  comment: Joi.string()
+    .trim()
+    .allow("", null),
+  productId: Joi.number()
+    .integer()
+    .required(),
+});
+
+exports.profileUpdateSchema = Joi.object({
+  gender: Joi.string().valid("male", "female", "other"),
+  name: Joi.string()
+    .trim()
+    .allow("", null),
+  role: Joi.string()
+    .valid("Admin", "User")
+    .allow("", null),
+  bio: Joi.string()
+    .trim()
+    .allow("", null),
+});
+exports.categorySchema = Joi.object({
+  name: Joi.string()
+    .trim()
+    .required(),
+  description: Joi.string()
+    .trim()
+    .allow("", null),
+  parentId: Joi.number().allow("", null),
+});
+
 // Joi schema for product validation
 exports.productSchema = Joi.object({
   title: Joi.string()

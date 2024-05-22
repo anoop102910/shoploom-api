@@ -4,19 +4,7 @@ const Joi = require("joi");
 const User = require("../models/user.model");
 const sendResponse = require("../utils/sendResponse");
 const uploadImage = require("../utils/uploadImage");
-
-const profileUpdateSchema = Joi.object({
-  gender: Joi.string().valid("male", "female", "other"),
-  name: Joi.string()
-    .trim()
-    .allow("", null),
-  role: Joi.string()
-    .valid("Admin", "User")
-    .allow("", null),
-  bio: Joi.string()
-    .trim()
-    .allow("", null),
-});
+const { profileUpdateSchema } = require("../utils/joi.schema");
 
 // @desc    Get list of all users
 // @route   GET /api/users

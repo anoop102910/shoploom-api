@@ -3,19 +3,7 @@ const Brand = require("../models/brand.model");
 const sendResponse = require("../utils/sendResponse");
 const Category = require("../models/category.model");
 const { uploadImage } = require("../utils/uploadImage");
-
-const brandSchema = Joi.object({
-  name: Joi.string()
-    .trim()
-    .required(),
-  description: Joi.string()
-    .trim()
-    .allow("", null),
-  image: Joi.allow("", null),
-  categoryId: Joi.number()
-    .integer()
-    .required(),
-});
+const { brandSchema } = require("../utils/joi.schema");
 
 // @desc    Create a brand
 // @route   POST /api/brands
