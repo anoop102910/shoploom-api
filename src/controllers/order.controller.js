@@ -7,7 +7,6 @@ const Product = require("../models/product.model");
 const sendResponse = require("../utils/sendResponse");
 const { orderSchema, orderItemSchema, orderUpdateSchema } = require("../utils/joi.schema");
 const Address = require("../models/address.model");
-const { orderBy } = require("firebase/firestore");
 
 // @desc    Create an order
 // @route   POST /api/orders
