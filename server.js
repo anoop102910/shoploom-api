@@ -3,7 +3,6 @@ const cors = require("cors");
 const helmet = require("helmet");
 const compression = require("compression");
 const fileUpload = require("express-fileupload");
-const ytdl = require("ytdl-core");
 
 const { CLIENT_URL } = require("./src/config/config");
 const sendResponse = require("./src/utils/sendResponse");
@@ -54,45 +53,7 @@ app.get("/", (req, res) => {
   sendResponse(res, 200, "Server is running");
 });
 
-app.get("/download", async (req, res) => {
-  const videoURL = req.query.url;
-  if (!ytdl.validateURL(videoURL)) {
-    return res.status(400).send("Invalid YouTube URL");
-  }
-
-  try {
-    const info = await ytdl.getInfo(videoURL);
-    // console.log(info);
-    const title = info.videoDetails.title;
-    console.log(title);
-    res.header("Content-Disposition", `attachment; filename="${title}.mp4"`);
-    const videoStream = ytdl(videoURL, { format: "mp4", quality: "lowest" });
-
-    videoStream.pipe(res);
-
-    videoStream.on("response", () => {
-      console.log("Download started");
-    });
-
-    videoStream.on("end", () => {
-      console.log("Download finished");
-    });
-
-    videoStream.on("error", error => {
-      console.error("Download error:", error);
-      res.status(500).send("An error occurred while downloading the video");
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred while downloading the video");
-  }
-});
-
-app.get("*", (req, res) => {
-  res.status(404).json({ message: "Page not found" });
-});
-
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, err => {
   if (err) console.log(err);

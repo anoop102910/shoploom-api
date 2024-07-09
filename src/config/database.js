@@ -18,14 +18,16 @@ const sequelize = new Sequelize(PGDATABASE, PGUSER, PGPASSWORD, {
   logging: false,
 });
 
-// sequelize
-//   .sync({ alter:true })
-//   .then(() => {
-//     console.log("All models were synchronized successfully.");
-//   })
-//   .catch(err => {
-//     console.error("Error synchronizing models:", err);
-//   });
+if (process.env.NODE_ENV === "test") {
+  sequelize
+    .sync({ alter: true })
+    .then(() => {
+      console.log("All models were synchronized successfully.");
+    })
+    .catch(err => {
+      console.error("Error synchronizing models:", err);
+    });
+}
 
 async function authenticateConnection() {
   try {
