@@ -18,8 +18,8 @@ WishlistItem.init(
   }
 );
 
-WishlistItem.belongsTo(User, { onDelete: "cascade" });
-WishlistItem.belongsTo(Product, { onDelete: "cascade" });
+WishlistItem.belongsTo(User, { onDelete: "cascade" ,onUpdate: "no action"});
+WishlistItem.belongsTo(Product, { onDelete: "cascade" ,onUpdate: "no action"});
 User.hasMany(WishlistItem);
 Product.hasMany(WishlistItem);
 

@@ -49,7 +49,6 @@ User.init(
   },
   {
     sequelize,
-    modelName: "users",
     hooks: {
       beforeCreate: async user => {
         if (user.password) {

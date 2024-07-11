@@ -22,11 +22,10 @@ Brand.init(
   },
   {
     sequelize,
-    modelName: "brands",
   }
 );
 
-Brand.belongsTo(Category, { onDelete: "cascade" });
+Brand.belongsTo(Category, { onDelete: "cascade" ,onUpdate: "no action"});
 Category.hasMany(Brand, { constraints: false });
 
 module.exports = Brand;

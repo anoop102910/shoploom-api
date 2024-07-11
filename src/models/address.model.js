@@ -51,5 +51,5 @@ Address.init(
   }
 );
 
-Address.belongsTo(User);
+Address.belongsTo(User, {onDelete:"cascade", onUpdate: "no action" });
 module.exports = Address;

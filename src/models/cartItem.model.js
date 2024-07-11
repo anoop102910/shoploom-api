@@ -12,7 +12,6 @@ CartItem.init(
       primaryKey: true,
       autoIncrement: true,
     },
-
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -23,7 +22,7 @@ CartItem.init(
   }
 );
 
-CartItem.belongsTo(User, { onDelete: "cascade" });
-CartItem.belongsTo(Product, { onDelete: "cascade" });
+CartItem.belongsTo(User, { onDelete: "cascade",onUpdate: "no action" });
+CartItem.belongsTo(Product, { onDelete: "cascade" ,onUpdate: "no action"});
 
 module.exports = CartItem;
