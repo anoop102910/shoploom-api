@@ -27,6 +27,8 @@ Rating.init(
   },
   {
     sequelize,
+    modelName: "review",
+
   }
 );
 

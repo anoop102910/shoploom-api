@@ -47,6 +47,8 @@ Order.init(
   },
   {
     sequelize,
+    modelName: "order",
+
   }
 );
 

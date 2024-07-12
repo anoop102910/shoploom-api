@@ -22,6 +22,8 @@ Brand.init(
   },
   {
     sequelize,
+    modelName: "brand",
+
   }
 );
 

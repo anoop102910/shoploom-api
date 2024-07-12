@@ -53,7 +53,9 @@ Product.init(
   },
   {
     sequelize,
-    paranoid:true
+    paranoid:true,
+    modelName: "product",
+
   }
 );
 

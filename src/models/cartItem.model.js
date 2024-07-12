@@ -19,6 +19,8 @@ CartItem.init(
   },
   {
     sequelize,
+    modelName: "cart_item",
+
   }
 );
 

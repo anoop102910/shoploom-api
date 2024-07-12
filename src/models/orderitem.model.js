@@ -23,6 +23,8 @@ const OrderItem = sequelize.define(
   },
   {
     sequelize,
+    modelName: "order_item",
+
   }
 );
 

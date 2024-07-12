@@ -48,6 +48,7 @@ Address.init(
   {
     sequelize,
     paranoid: true,
+    modelName: "address",
   }
 );
 

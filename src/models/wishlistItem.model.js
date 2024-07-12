@@ -15,11 +15,12 @@ WishlistItem.init(
   },
   {
     sequelize,
+    modelName: "wishlist_item",
   }
 );
 
-WishlistItem.belongsTo(User, { onDelete: "cascade" ,onUpdate: "no action"});
-WishlistItem.belongsTo(Product, { onDelete: "cascade" ,onUpdate: "no action"});
+WishlistItem.belongsTo(User, { onDelete: "cascade", onUpdate: "no action" });
+WishlistItem.belongsTo(Product, { onDelete: "cascade", onUpdate: "no action" });
 User.hasMany(WishlistItem);
 Product.hasMany(WishlistItem);
 
